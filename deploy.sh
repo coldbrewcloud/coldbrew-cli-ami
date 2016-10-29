@@ -4,7 +4,7 @@ echo "Copying Source Image ${SOURCE_IMAGE_NAME} (${SOURCE_IMAGE_ID}) in ${SOURCE
 
 for REGION_NAME in `cat aws_regions.txt`; do
     IMAGE_ID=$SOURCE_IMAGE_ID
-    if [ "${SOURCE_REGION}" -ne "${REGION_NAME}" ]; then
+    if [ "${SOURCE_REGION}" != "${REGION_NAME}" ]; then
         echo "Copying Source Image to ${REGION_NAME}"
         IMAGE_ID=`aws ec2 copy-image --region=${REGION_NAME} --name=${SOURCE_IMAGE_NAME} --source-region=${SOURCE_REGION} --source-image-id=${SOURCE_IMAGE_ID} | jq -r .ImageId`
         echo "Making ${IMAGE_ID} public"
