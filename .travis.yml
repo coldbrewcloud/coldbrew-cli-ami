@@ -2,12 +2,14 @@ language: bash
 
 before_script:
   - pip install --user awscli
+  - export TS=`date +"%s"`
+  - mkdir -p ecs-ci-ami/default
 
 script:
-  - export TS=`date +"%s"`
-  - travis/packer build -var "ts=${TS}" -parallel=false packer.json
-  - mkdir -p ecs-ci-ami/default
-  - for region in `cat aws_regions.txt`; do echo `aws ec2 --region=$region describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].ImageId"` > ecs-ci-ami/default/$region; done
+  - travis/packer build -var "ts=${TS}" -var "aws_region=${DEFAULT_AWS_REGION}" -var "source_ami=${SOURCE_AMI}" packer.json
+  - IMAGE_ID=`aws ec2 describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].ImageId"`
+  - AMI_NAME=`aws ec2 describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].Name"`
+  - SOURCE_REGION=${DEFAULT_AWS_REGION} SOURCE_IMAGE_NAME=${AMI_NAME} SOURCE_IMAGE_ID=${IMAGE_ID} ./deploy.sh
   - ls -la ecs-ci-ami/default/
 
 deploy:
