@@ -1,0 +1,20 @@
+before_install:
+  - pip install --user awscli
+
+install:
+  - export TS=`date +"%s"`
+  - travis/packer build packer.json -v "ts=${TS}"
+  - mkdir -p ecs-ci-ami/default
+  - for region in `cat aws_regions.txt`; do echo `aws ec2 --region=$region describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].ImageId"` > ecs-ci-ami/default/$region; done
+
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: files.coldbrewcloud.com
+  region: us-west-2
+  acl: public_read
+  skip_cleanup: true
+  local_dir: ecs-ci-ami
+  upload-dir: coldbrew-cli/ecs-ci-ami
+  detect_encoding: true
