@@ -11,7 +11,7 @@ script:
   - echo "Image ID: ${IMAGE_ID}"
   - AMI_NAME=`aws ec2 describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].Name"`
   - echo "Image Name: ${AMI_NAME}"
-  - SOURCE_REGION=${DEFAULT_AWS_REGION} SOURCE_IMAGE_NAME=${AMI_NAME} SOURCE_IMAGE_ID=${IMAGE_ID} ./deploy.sh
+  - SOURCE_REGION=${AWS_DEFAULT_REGION} SOURCE_IMAGE_NAME=${AMI_NAME} SOURCE_IMAGE_ID=${IMAGE_ID} ./deploy.sh
   - ls -la ecs-ci-ami/default/
 
 deploy:
