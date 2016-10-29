@@ -8,9 +8,7 @@ before_script:
 script:
   - travis/packer build -var "ts=${TS}" -var "aws_region=${AWS_DEFAULT_REGION}" -var "source_ami=${SOURCE_AMI}" packer.json
   - IMAGE_ID=`aws ec2 describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].ImageId"`
-  - echo "Image ID: ${IMAGE_ID}"
   - AMI_NAME=`aws ec2 describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].Name"`
-  - echo "Image Name: ${AMI_NAME}"
   - SOURCE_REGION=${AWS_DEFAULT_REGION} SOURCE_IMAGE_NAME=${AMI_NAME} SOURCE_IMAGE_ID=${IMAGE_ID} ./deploy.sh
   - ls -la ecs-ci-ami/default/
 
