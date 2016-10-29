@@ -7,6 +7,10 @@ for REGION_NAME in `cat aws_regions.txt`; do
     if [ "${SOURCE_REGION}" != "${REGION_NAME}" ]; then
         echo "Copying Source Image to ${REGION_NAME}"
         IMAGE_ID=`aws ec2 copy-image --region=${REGION_NAME} --name=${SOURCE_IMAGE_NAME} --source-region=${SOURCE_REGION} --source-image-id=${SOURCE_IMAGE_ID} | jq -r .ImageId`
+
+        ## TOOD: have to WAIT until copied image become fully availalbe
+        ##  ....
+        
         echo "Making ${IMAGE_ID} public"
         aws ec2 modify-image-attribute --image-id ${IMAGE_ID} --launch-permission "{\"Add\": [{\"Group\":\"all\"}]}"
         echo "Tagging ${IMAGE_ID}"
