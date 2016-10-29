@@ -1,11 +1,14 @@
+language: ruby
+
 before_install:
   - pip install --user awscli
 
 install:
   - export TS=`date +"%s"`
-  - travis/packer build -var "ts=${TS}" packer.json 
+  - travis/packer build -var "ts=${TS}" packer.json
   - mkdir -p ecs-ci-ami/default
   - for region in `cat aws_regions.txt`; do echo `aws ec2 --region=$region describe-images --filter "Name=tag:coldbrew_cli_created,Values=${TS}" | jq -r ".Images[0].ImageId"` > ecs-ci-ami/default/$region; done
+  - ls -la ecs-ci-ami/default/
 
 deploy:
   provider: s3
