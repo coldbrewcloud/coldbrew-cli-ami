@@ -2,7 +2,7 @@
 
 echo "Copying Source Image ${SOURCE_IMAGE_NAME} (${SOURCE_IMAGE_ID}) in ${SOURCE_REGION} to all other regions"
 
-for $REGION_NAME in `cat aws_regions.txt`; do
+for REGION_NAME in `cat aws_regions.txt`; do
     IMAGE_ID=$SOURCE_IMAGE_ID
     if [ "${SOURCE_REGION}" -ne "${REGION_NAME}" ]; then
         echo "Copying Source Image to ${REGION_NAME}"
