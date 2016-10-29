@@ -13,7 +13,7 @@ To build AMI images, you will need [Packer](https://www.packer.io/).
 To build the AMI image:
 
 ```bash
-packer build packer.json
+packer build -var "image_version=`cat VERSION`" packer.json
 ```
 
 This will build a new AMI image in `us-west-2` region and will copy it to all other ECS-supported regions.
