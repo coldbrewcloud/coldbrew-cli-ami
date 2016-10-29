@@ -1,12 +1,9 @@
-language: go
+language: bash
 
-go:
-  - 1.7.3
-
-before_install:
+before_script:
   - pip install --user awscli
 
-install:
+script:
   - export TS=`date +"%s"`
   - travis/packer build -var "ts=${TS}" packer.json
   - mkdir -p ecs-ci-ami/default
