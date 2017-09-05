@@ -1,7 +1,7 @@
 {
     "variables": {
         "aws_region": "us-west-2",
-        "source_ami": "ami-a2ca61c2",
+        "source_ami": "ami-1d668865",
         "ts": "{{timestamp}}",
         "image_version": "1.0.0"
     },
@@ -29,6 +29,7 @@
                 "coldbrew_cli_image_version": "{{user `image_version`}}"
             },
             "run_tags": {
+                "coldbrew_cli_created": "{{user `ts`}}",
                 "coldbrew_cli_image_version": "{{user `image_version`}}"
             }
         }
